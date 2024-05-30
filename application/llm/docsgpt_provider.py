@@ -18,8 +18,8 @@ class DocsGPTAPILLM(BaseLLM):
             json={
                 "prompt": prompt,
                 "max_new_tokens": 30
-            }
-        )
+            }, 
+        timeout=60)
         response_clean = response.json()['a'].replace("###", "")
 
         return response_clean
@@ -36,8 +36,8 @@ class DocsGPTAPILLM(BaseLLM):
                 "prompt": prompt,
                 "max_new_tokens": 256
             },
-            stream=True
-        )
+            stream=True, 
+        timeout=60)
     
         for line in response.iter_lines():
             if line:

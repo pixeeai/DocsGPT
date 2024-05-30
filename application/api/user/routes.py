@@ -204,7 +204,7 @@ def combined_json():
             }
         )
     if settings.VECTOR_STORE == "faiss":
-        data_remote = requests.get("https://d3dg1063dc54p9.cloudfront.net/combined.json").json()
+        data_remote = requests.get("https://d3dg1063dc54p9.cloudfront.net/combined.json", timeout=60).json()
         for index in data_remote:
             index["location"] = "remote"
             data.append(index)
@@ -224,7 +224,7 @@ def check_docs():
     if os.path.exists(vectorstore) or data["docs"] == "default":
         return {"status": "exists"}
     else:
-        r = requests.get(base_path + vectorstore + "index.faiss")
+        r = requests.get(base_path + vectorstore + "index.faiss", timeout=60)
 
         if r.status_code != 200:
             return {"status": "null"}
@@ -235,7 +235,7 @@ def check_docs():
                 f.write(r.content)
 
             # download the store
-            r = requests.get(base_path + vectorstore + "index.pkl")
+            r = requests.get(base_path + vectorstore + "index.pkl", timeout=60)
             with open(vectorstore + "index.pkl", "wb") as f:
                 f.write(r.content)
 
