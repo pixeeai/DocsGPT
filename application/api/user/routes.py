@@ -9,6 +9,7 @@ from application.api.user.tasks import ingest
 
 from application.core.settings import settings
 from application.vectorstore.vector_creator import VectorCreator
+from security import safe_requests
 
 mongo = MongoClient(settings.MONGO_URI)
 db = mongo["docsgpt"]
@@ -224,7 +225,7 @@ def check_docs():
     if os.path.exists(vectorstore) or data["docs"] == "default":
         return {"status": "exists"}
     else:
-        r = requests.get(base_path + vectorstore + "index.faiss")
+        r = safe_requests.get(base_path + vectorstore + "index.faiss")
 
         if r.status_code != 200:
             return {"status": "null"}
@@ -235,7 +236,7 @@ def check_docs():
                 f.write(r.content)
 
             # download the store
-            r = requests.get(base_path + vectorstore + "index.pkl")
+            r = safe_requests.get(base_path + vectorstore + "index.pkl")
             with open(vectorstore + "index.pkl", "wb") as f:
                 f.write(r.content)
 
